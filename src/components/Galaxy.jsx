@@ -186,6 +186,7 @@ export default function Galaxy({
   rotationSpeed = 0.1,
   autoCenterRepulsion = 0,
   transparent = true,
+  className = "",
   ...rest
 }) {
   const ctnDom = useRef(null);
@@ -328,5 +329,5 @@ export default function Galaxy({
     transparent
   ]);
 
-  return <div ref={ctnDom} className="fixed inset-0 z-1" {...rest} />;
+  return <div ref={ctnDom} className={`absolute inset-0 ${className}`} {...rest} />;
 }

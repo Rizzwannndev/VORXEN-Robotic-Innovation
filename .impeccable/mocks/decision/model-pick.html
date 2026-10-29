@@ -1,0 +1,25 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Michroma&family=Martian+Mono:wght@300;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1440px;height:900px;overflow:hidden;background:#050607;color:#D8F3FF;font-family:"Martian Mono",monospace}
+body{background:repeating-linear-gradient(0deg,rgba(108,225,255,.04) 0 1px,transparent 1px 3px),radial-gradient(circle at 50% 45%,#0d1a20,#050607 60%)}
+.log{position:absolute;left:56px;top:120px;width:360px;font-size:12px;line-height:2;color:#6CE1FF;opacity:.8}
+.log b{color:#D8F3FF;font-weight:500}
+.frame{position:absolute;left:520px;top:110px;width:400px;height:600px}
+.frame i{position:absolute;width:40px;height:40px;border:2px solid #6CE1FF}
+.frame i:nth-child(1){left:0;top:0;border-right:0;border-bottom:0}.frame i:nth-child(2){right:0;top:0;border-left:0;border-bottom:0}
+.frame i:nth-child(3){left:0;bottom:0;border-right:0;border-top:0}.frame i:nth-child(4){right:0;bottom:0;border-left:0;border-top:0}
+.robot{position:absolute;left:600px;top:150px;width:240px;height:520px;border-radius:110px 110px 20px 20px;background:linear-gradient(#1B2228,#0c1114);border:1px solid #6CE1FF55}
+h1{position:absolute;left:56px;bottom:56px;font-family:Michroma;font-size:110px;letter-spacing:.06em}
+.side{position:absolute;right:56px;top:120px;width:300px;font-size:12px;line-height:2.2}
+.bar{height:4px;background:#1B2228;margin:4px 0 14px}.bar span{display:block;height:100%;background:#6CE1FF}
+nav{position:absolute;left:56px;right:56px;top:36px;display:flex;justify-content:space-between;font-size:12px;letter-spacing:.2em}
+</style></head><body>
+<nav><span>VORXEN // SYS</span><span>HOME</span><span>SYSTEMS</span><span>ABOUT</span><span>CONTACT</span></nav>
+<div class="log">[OK] <b>POWER</b> rail stable<br>[OK] <b>SERVO</b> A1–A6 calibrated<br>[OK] <b>NEURAL CORE</b> 1000+ neurons<br>[OK] <b>VISION</b> stereo lock<br>[..] <b>LEARNING</b> in progress</div>
+<div class="frame"><i></i><i></i><i></i><i></i></div><div class="robot"></div>
+<div class="side">ACCURACY 99%<div class="bar"><span style="width:99%"></span></div>UNITS ONLINE 15<div class="bar"><span style="width:60%"></span></div>SYNC<div class="bar"><span style="width:82%"></span></div></div>
+<h1>VORXEN</h1>
+</body></html>

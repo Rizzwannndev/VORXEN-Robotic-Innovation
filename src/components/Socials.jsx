@@ -1,47 +1,33 @@
-import { FaInstagram, FaTwitter, FaFacebookF, FaLinkedin } from 'react-icons/fa';
+import { FiArrowUpRight } from "react-icons/fi";
+import { socials } from "../data/site";
 
-const Socials = () => {
+const Socials = ({ className = "" }) => {
   return (
-    <div
-      className="
-        flex items-center justify-center space-x-6
-        bg-white/10 backdrop-blur-md
-        rounded-full px-8 py-3
-        shadow-lg border border-white/20
-        max-w-max
-      "
-      style={{ boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.37)' }}
-    >
-      {[
-        { href: 'https://instagram.com', label: 'Instagram', icon: <FaInstagram /> },
-        { href: 'https://twitter.com', label: 'Twitter', icon: <FaTwitter /> },
-        { href: 'https://www.tiktok.com', label: 'TikTok', icon: <FaLinkedin /> },
-        { href: 'https://facebook.com', label: 'Facebook', icon: <FaFacebookF /> },
-      ].map(({ href, label, icon }) => (
-        <a
-          key={label}
-          href={href}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label={label}
-          className="
-            inline-block
-            px-1/2 rounded-full
-            text-white text-2xl
-            transition-transform transition-colors duration-300 ease-out
-            hover:scale-110
-            hover:-translate-y-1
-            focus:outline-none focus:ring-2 focus:ring-white/60
-            shadow-md
-            hover:shadow-lg
-            z-9999
-          "
-          style={{ willChange: 'transform, background-color, color, box-shadow' }}
-        >
-          {icon}
-        </a>
+    <ul className={`flex flex-wrap gap-x-6 gap-y-2 ${className}`}>
+      {socials.map(({ href, label }) => (
+        <li key={label}>
+          {!href ? (
+            <span className="t-label inline-flex items-center gap-2 py-1 text-dim">
+              {label} <span className="text-warn">· Pending</span>
+            </span>
+          ) : (
+          <a
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="t-label group inline-flex items-center gap-1.5 py-1 text-dim transition-colors hover:text-phos"
+          >
+            {label}
+            <FiArrowUpRight
+              aria-hidden="true"
+              className="transition-transform duration-300 ease-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+            />
+            <span className="sr-only">(opens in a new tab)</span>
+          </a>
+          )}
+        </li>
       ))}
-    </div>
+    </ul>
   );
 };
 

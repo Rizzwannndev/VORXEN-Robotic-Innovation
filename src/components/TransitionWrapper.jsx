@@ -1,49 +1,66 @@
-import gsap from "gsap";
-import { createContext, useContext, useRef } from "react";
+import { useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { gsap, prefersReducedMotion } from "../lib/gsap";
 
-const TransitionContext = createContext();
+import { TransitionContext } from "../lib/transition";
 
-export const useTransition = () => useContext(TransitionContext);
+const routeName = (to) => {
+  const path = to.split("#")[0];
+  return path === "/" ? "/core" : path;
+};
 
+// Route changes scan out (a line sweeps down, leaving black), swap, and
+// scan back in.
 const TransitionWrapper = ({ children }) => {
   const navigate = useNavigate();
-  const overlayRef = useRef(null);
+  const fillRef = useRef(null);
+  const lineRef = useRef(null);
+  const labelRef = useRef(null);
+  const busy = useRef(false);
 
-  const startTransition = (to) => {
-    const tl = gsap.timeline({
-      onComplete: () => {
+  const go = useCallback(
+    (to) => {
+      if (busy.current) return;
+      if (prefersReducedMotion()) {
         navigate(to);
-        enterAnimation();
-      },
-    });
+        return;
+      }
+      busy.current = true;
+      const fill = fillRef.current;
+      const line = lineRef.current;
+      const label = labelRef.current;
+      const h = () => window.innerHeight;
+      label.textContent = `Loading ${routeName(to)}`;
 
-    // fade in
-    tl.to(overlayRef.current, {
-      opacity: 1,
-      duration: 0.6,
-      ease: "power4.out",
-    });
-  };
-
-  const enterAnimation = () => {
-    gsap.to(overlayRef.current, {
-      opacity: 0,
-      duration: 0.4,
-      ease: "power2.out",
-    });
-  };
+      gsap
+        .timeline({ onComplete: () => (busy.current = false) })
+        .set(fill, { transformOrigin: "50% 0%", scaleY: 0 })
+        .set(line, { y: 0, autoAlpha: 1 })
+        .to(fill, { scaleY: 1, duration: 0.6, ease: "expo.inOut" }, 0)
+        .to(line, { y: h, duration: 0.6, ease: "expo.inOut" }, 0)
+        .to(label, { autoAlpha: 1, duration: 0.15 }, 0.35)
+        .add(() => navigate(to))
+        .set(fill, { transformOrigin: "50% 100%" }, "+=0.2")
+        .set(line, { y: 0 })
+        .to(label, { autoAlpha: 0, duration: 0.15 })
+        .to(fill, { scaleY: 0, duration: 0.75, ease: "expo.inOut" })
+        .to(line, { y: h, duration: 0.75, ease: "expo.inOut" }, "<")
+        .set(line, { autoAlpha: 0 });
+    },
+    [navigate]
+  );
 
   return (
-    <TransitionContext.Provider value={{ startTransition }}>
-      
-      {/* Fade Overlay */}
-      <div
-        ref={overlayRef}
-        className="fixed inset-0 pointer-events-none z-[999] bg-black opacity-0"
-      />
-
+    <TransitionContext.Provider value={{ go }}>
       {children}
+      <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-[80]">
+        <div ref={fillRef} className="absolute inset-0 scale-y-0 bg-void" />
+        <div ref={lineRef} className="invisible absolute inset-x-0 top-0 h-px bg-diag" />
+        <span
+          ref={labelRef}
+          className="t-label invisible absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-dim"
+        />
+      </div>
     </TransitionContext.Provider>
   );
 };

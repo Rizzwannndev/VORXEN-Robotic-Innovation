@@ -1,0 +1,25 @@
+{
+  "buildPath": "code",
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [
+      ".impeccable/mocks/**"
+    ],
+    "ignoreValues": [
+      {
+        "rule": "hero-eyebrow-chip",
+        "value": "*",
+        "files": [
+          ".impeccable/mocks/decision/assigned.html"
+        ],
+        "createdAt": "2026-10-29T15:32:20.641Z",
+        "reason": "Claude: unchosen decision-round sketch, not shipped; the user picked a different card"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "dune",
+        "createdAt": "2026-10-29T16:12:30.652Z"
+      }
+    ]
+  }
+}
