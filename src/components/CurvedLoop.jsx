@@ -44,7 +44,6 @@ const CurvedLoop = ({
     if (textPathRef.current) {
       const initial = -spacing;
       textPathRef.current.setAttribute('startOffset', initial + 'px');
-      setOffset(initial);
     }
   }, [spacing]);
 
@@ -96,19 +95,18 @@ const CurvedLoop = ({
     dirRef.current = velRef.current > 0 ? 'right' : 'left';
   };
 
-  const cursorStyle = interactive ? (dragRef.current ? 'grabbing' : 'grab') : 'auto';
 
   return (
     <div
-      className="flex items-center justify-center w-full py-15"
-      style={{ visibility: ready ? 'visible' : 'hidden', cursor: cursorStyle }}
+      className="flex items-center justify-center w-full"
+      style={{ visibility: ready ? 'visible' : 'hidden', cursor: interactive ? 'grab' : 'auto' }}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
       onPointerUp={endDrag}
       onPointerLeave={endDrag}
     >
       <svg
-        className="select-none w-full overflow-visible block aspect-[100/12] text-[6rem] font-bold uppercase leading-none"
+        className="select-none w-full overflow-visible block aspect-[100/12] text-[6rem] font-normal uppercase leading-none"
         viewBox="0 0 1440 120"
       >
         <text ref={measureRef} xmlSpace="preserve" style={{ visibility: 'hidden', opacity: 0, pointerEvents: 'none' }}>
@@ -118,7 +116,7 @@ const CurvedLoop = ({
           <path ref={pathRef} id={pathId} d={pathD} fill="none" stroke="transparent" />
         </defs>
         {ready && (
-          <text xmlSpace="preserve" className={`fill-white ${className ?? ''}`}>
+          <text xmlSpace="preserve" className={className ?? "fill-white"}>
             <textPath ref={textPathRef} href={`#${pathId}`} startOffset={offset + 'px'} xmlSpace="preserve">
               {totalText}
             </textPath>

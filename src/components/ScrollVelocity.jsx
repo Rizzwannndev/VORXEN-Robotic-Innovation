@@ -9,6 +9,8 @@ import {
   useAnimationFrame
 } from 'motion/react';
 
+const MotionDiv = motion.div;
+
 function useElementWidth(ref) {
   const [width, setWidth] = useState(0);
 
@@ -31,6 +33,7 @@ export const ScrollVelocity = ({
   texts = [],
   velocity = 100,
   className = '',
+  rowClassNames = [],
   damping = 50,
   stiffness = 400,
   numCopies = 6,
@@ -108,12 +111,12 @@ export const ScrollVelocity = ({
 
     return (
       <div className={`${parallaxClassName} relative overflow-hidden`} style={parallaxStyle}>
-        <motion.div
-          className={`${scrollerClassName} flex whitespace-nowrap text-center font-sans text-4xl font-bold tracking-[-0.02em] drop-shadow md:text-[5rem] md:leading-[5rem]`}
+        <MotionDiv
+          className={`${scrollerClassName ?? ''} flex whitespace-nowrap text-center`}
           style={{ x, ...scrollerStyle }}
         >
           {spans}
-        </motion.div>
+        </MotionDiv>
       </div>
     );
   }
@@ -123,7 +126,7 @@ export const ScrollVelocity = ({
       {texts.map((text, index) => (
         <VelocityText
           key={index}
-          className={className}
+          className={`${className} ${rowClassNames[index] ?? ''}`}
           baseVelocity={index % 2 !== 0 ? -velocity : velocity}
           scrollContainerRef={scrollContainerRef}
           damping={damping}

@@ -1,45 +1,97 @@
-import Spline from '@splinetool/react-spline';
-import Socials from './Socials';
+import { useLayoutEffect, useRef } from "react";
+import { FiArrowUp } from "react-icons/fi";
+import { useLocation } from "react-router-dom";
+import SplineScene from "./SplineScene";
+import Socials from "./Socials";
+import TransitionLink from "./TransitionLink";
+import Brackets from "./Brackets";
+import { Logo } from "./Header";
+import { channels, modules, scenes } from "../data/site";
+import { gsap, prefersReducedMotion } from "../lib/gsap";
+import { scrollToId } from "../lib/scroll";
 
 const Footer = () => {
+  const root = useRef(null);
+  const { pathname } = useLocation();
+
+  // The giant wordmark scans in from the top as the footer arrives.
+  useLayoutEffect(() => {
+    if (prefersReducedMotion()) return;
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        "[data-mark]",
+        { clipPath: "inset(0 0 100% 0)" },
+        {
+          clipPath: "inset(0 0 0% 0)",
+          ease: "none",
+          scrollTrigger: { trigger: "[data-mark]", start: "top bottom", end: "top 82%", scrub: true },
+        }
+      );
+    }, root);
+    return () => ctx.revert();
+  }, [pathname]);
+
   return (
-    <footer className="w-full bg-black text-white pt-10 px-6 md:px-16 z-2">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-10 md:gap-0">
-        
-        {/* LEFT: Logo + Text + Socials */}
-        <div className="w-full md:w-[26%] flex flex-col gap-4 items-start">
-          <h2 className="text-2xl font-bold -ml-2"><span className="flex justify-center items-center cursor-pointer hover:scale-105  duration-300 transition-all ease-out main-head"><svg xmlns="http://www.w3.org/2000/svg" height="48px" viewBox="0 -960 960 960" width="48px" fill="#e3e3e3"><path d="M200-200v-80h560v80H200Zm14-160 266-400 266 400H214Zm266-80Zm-118 0h236L480-616 362-440Z"/></svg> VORXEN</span></h2>
-          <p className="text-sm text-gray-300">
+    <footer ref={root} className="relative overflow-hidden border-t border-rule bg-void px-5 pt-16 sm:px-8 lg:px-12">
+      <div className="grid gap-12 lg:grid-cols-12 lg:gap-8">
+        <div className="flex flex-col gap-6 lg:col-span-3">
+          <Logo />
+          <p className="max-w-[30ch] text-[0.95rem] leading-relaxed text-dim">
             Advanced AI and robotics experiences that anticipate, adapt, and evolve.
           </p>
-          <span className='-ml-1 mt-2'>
-            <Socials />
-          </span>
+          <Socials className="flex-col gap-y-1" />
         </div>
 
-        {/* CENTER: Spline */}
-        <div className="w-full md:w-[58%] h-48 md:h-100 relative">
-          <Spline scene="https://prod.spline.design/p5Z-jq1vxUDynMTH/scene.splinecode" />
-          <div className="absolute bottom-5 right-3 w-[150px] h-[50px] bg-black"></div>
+        <div className="relative h-64 text-dim sm:h-80 lg:col-span-6 lg:h-[26rem]">
+          <SplineScene scene={scenes.footer} className="h-full w-full" label="Linking" />
+          <Brackets size={16} />
         </div>
 
-        {/* RIGHT: Links + Credit */}
-        <div className="w-full md:w-[26%] flex flex-col gap-4 items-start pl-8 md:pl-12">
-        <h3 className="font-semibold text-lg">Links</h3>
-        <ul className="flex flex-col gap-2 text-gray-300">
-            <li><a href="#" className="hover:text-white hover:pl-2 transition-all ease-out duration:100">Neural Core</a></li>
-            <li><a href="#" className="hover:text-white transition-all ease-out duration:100 hover:pl-2">Synth Systems</a></li>
-            <li><a href="#" className="hover:text-white transition-all ease-out duration:100 hover:pl-2">Cyber Interface</a></li>
-            <li><a href="#" className="hover:text-white transition-all ease-out duration:100 hover:pl-2">AI Nexus</a></li>
-        </ul>
-        <p className="text-xs text-gray-500 mt-4">
-            Designed & Made By <span className='hover:pl-2 duration-300 transition-all ease-out '>Rizwan Waseem</span>
-        </p>
+        <div className="grid grid-cols-2 gap-8 lg:col-span-3 lg:grid-cols-1">
+          <nav aria-label="Footer">
+            <p className="t-label mb-3 text-dim">Channels</p>
+            <ul className="space-y-1.5">
+              {channels.map(({ to, label }) => (
+                <li key={to}>
+                  <TransitionLink to={to} className="text-[1.05rem] text-phos transition-colors hover:text-diag">
+                    {label}
+                  </TransitionLink>
+                </li>
+              ))}
+            </ul>
+          </nav>
+          <div>
+            <p className="t-label mb-3 text-dim">Modules</p>
+            <ul className="space-y-1.5">
+              {modules.map((m) => (
+                <li key={m.id}>
+                  <TransitionLink to={`/systems#${m.id}`} className="text-[1.05rem] text-phos transition-colors hover:text-diag">
+                    {m.name}
+                  </TransitionLink>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </div>
-      <div className="big-text flex justify-center items-center">
-        <h1 className="text-[200px] text-center cursor-scale -my-12">VORXEN</h1>
+
+      <div className="t-label mt-16 flex flex-wrap items-center justify-between gap-4 border-t border-rule pt-5 text-dim">
+        <span>
+          Designed &amp; made by <span className="text-phos">Rizwan Waseem</span>
+        </span>
+        <span>© 2026 VORXEN · A concept system</span>
+        <button type="button" onClick={() => scrollToId(null)} className="py-1 transition-colors hover:text-phos">
+          Back to top <FiArrowUp aria-hidden="true" className="inline align-[-0.15em]" />
+        </button>
       </div>
+
+      <p
+        data-mark
+        aria-hidden="true"
+        className="font-display -mb-[0.18em] mt-6 text-center text-[15.2vw] leading-[0.9] tracking-[-0.01em] text-phos select-none"
+      >
+        VORXEN
+      </p>
     </footer>
   );
 };

@@ -1,0 +1,41 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Stencil+Display:wght@700;900&family=Michroma&family=Martian+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1440px;height:900px;overflow:hidden;background:#0E0E0C;color:#EDEAE2;font-family:"Martian Mono",monospace}
+.floor{position:absolute;inset:0;background:
+ radial-gradient(ellipse 38% 46% at 50% 40%,rgba(255,184,28,.22),transparent 70%),
+ repeating-linear-gradient(0deg,rgba(255,255,255,.025) 0 1px,transparent 1px 120px),
+ repeating-linear-gradient(90deg,rgba(255,255,255,.025) 0 1px,transparent 1px 120px),#0E0E0C}
+.lamp{position:absolute;left:50%;top:-40px;width:520px;height:760px;transform:translateX(-50%);background:linear-gradient(180deg,rgba(255,196,80,.30),rgba(255,184,28,0) 80%);clip-path:polygon(40% 0,60% 0,100% 100%,0 100%);filter:blur(6px)}
+.cell{position:absolute;left:470px;top:150px;width:500px;height:560px;border:10px solid #FFB81C}
+.cell::before{content:"";position:absolute;left:-10px;right:-10px;bottom:-34px;height:22px;background:repeating-linear-gradient(-45deg,#FFB81C 0 22px,#0E0E0C 22px 44px)}
+.robot{position:absolute;left:590px;top:190px;width:260px;height:470px;border-radius:120px 120px 30px 30px;background:radial-gradient(circle at 50% 22%,#f2f0ea 0 22%,#cfccc4 23% 30%,transparent 31%),linear-gradient(180deg,transparent 34%,#d9d6ce 34% 100%);opacity:.92}
+.eye{position:absolute;top:262px;width:26px;height:10px;background:#FFB81C}
+.curtain{position:absolute;left:460px;top:130px;width:2px;height:600px;background:linear-gradient(#E5402A00,#E5402A,#E5402A00)}
+.curtain.r{left:978px}
+h1{position:absolute;left:0;right:0;bottom:86px;text-align:center;font-family:Michroma,sans-serif;font-size:188px;letter-spacing:.02em;line-height:1;color:#EDEAE2;mix-blend-mode:difference}
+.lane{position:absolute;left:96px;top:0;bottom:0;width:6px;background:#FFB81C}
+.ypos{position:absolute;left:116px;top:420px;font-size:12px;color:#FFB81C;letter-spacing:.1em}
+nav{position:absolute;top:34px;left:150px;right:56px;display:flex;justify-content:space-between;font-size:12px;letter-spacing:.18em;text-transform:uppercase}
+nav b{font-family:Michroma;font-size:16px;letter-spacing:.2em}
+nav span i{font-style:normal;color:#FFB81C;margin-right:8px}
+.plac{position:absolute;font-size:11px;letter-spacing:.14em;text-transform:uppercase;border-left:4px solid #FFB81C;padding:8px 12px;line-height:1.7;background:rgba(14,14,12,.7)}
+.zone{position:absolute;font-family:"Big Shoulders Stencil Display";font-weight:900;font-size:120px;color:#FFB81C;line-height:.8}
+.mode{position:absolute;right:56px;bottom:40px;display:flex;gap:10px;font-size:11px;letter-spacing:.16em}
+.mode span{border:1px solid #EDEAE2;padding:7px 12px}.mode .on{background:#FFB81C;color:#0E0E0C;border-color:#FFB81C}
+</style></head><body>
+<div class="floor"></div><div class="lamp"></div>
+<div class="lane"></div><div class="ypos">Y +0000.0 MM</div>
+<nav><b>▲ VORXEN</b><span><i>01</i>CELL</span><span><i>02</i>SYSTEMS</span><span><i>03</i>ORIGIN</span><span><i>04</i>CONTACT</span><span>AUDIO ▮▮▮</span></nav>
+<div class="cell"></div>
+<div class="curtain"></div><div class="curtain r"></div>
+<div class="robot"></div><div class="eye" style="left:672px"></div><div class="eye" style="left:742px"></div>
+<div class="zone" style="left:150px;top:150px">01</div>
+<div class="plac" style="left:150px;top:270px">Zone 01 — Primary cell<br>Unit VX-01 · Humanoid<br>Status: running</div>
+<div class="plac" style="right:56px;top:150px;text-align:right;border-left:0;border-right:4px solid #E5402A">Presence detected<br>Light curtain · tripped</div>
+<div class="plac" style="right:56px;top:560px">Robotic innovation<br>AI · Humanoid · Cybernetics</div>
+<h1>VORXEN</h1>
+<div class="mode"><span class="on">AUTO</span><span>MANUAL</span><span>SCROLL ↓</span></div>
+</body></html>

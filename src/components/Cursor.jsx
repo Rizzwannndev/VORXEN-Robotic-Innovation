@@ -1,111 +1,122 @@
-import { useEffect, useRef } from "react";
-import { useLocation } from "react-router-dom";
-import gsap from "gsap";
+import { useEffect, useRef, useState } from "react";
+import { isFinePointer, prefersReducedMotion } from "../lib/gsap";
 
+const LOCKABLE = "a, button, input, textarea, select, [data-lock]";
+const IDLE = 26;
+const PAD = 8;
+
+// Target-lock cursor: four calibration brackets that snap to the bounds of
+// whatever interactive element sits under the pointer.
 const Cursor = () => {
-  const cursorRef = useRef(null);
-  const animationFrame = useRef(null);
-  const location = useLocation();
+  const [enabled] = useState(() => isFinePointer() && !prefersReducedMotion());
+  const frameRef = useRef(null);
+  const dotRef = useRef(null);
+  const tagRef = useRef(null);
 
   useEffect(() => {
-    const cursor = cursorRef.current;
-    if (!cursor) return;
+    if (!enabled) return;
+    const html = document.documentElement;
+    html.classList.add("has-lock-cursor");
 
-    let mouseX = 0;
-    let mouseY = 0;
+    const frame = frameRef.current;
+    const dot = dotRef.current;
+    const tag = tagRef.current;
+    const cur = { x: -100, y: -100, w: IDLE, h: IDLE };
+    let mx = -100;
+    let my = -100;
+    let target = null;
+    let visible = false;
+    let raf = 0;
 
-    const moveCursor = (e) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-    };
-
-    window.addEventListener("mousemove", moveCursor);
-
-    const animate = () => {
-      if (cursor) {
-        gsap.to(cursor, {
-          x: mouseX,
-          y: mouseY,
-          duration: 0.15,
-          ease: "power2.out",
-        });
+    const onMove = (e) => {
+      mx = e.clientX;
+      my = e.clientY;
+      if (!visible) {
+        visible = true;
+        cur.x = mx;
+        cur.y = my;
+        frame.style.opacity = dot.style.opacity = "1";
       }
-      animationFrame.current = requestAnimationFrame(animate);
     };
-    animate();
-
-    // Hover effects #1
-    const addHover = () =>
-      gsap.to(cursor, { scale: 5, backgroundColor: "white", duration: 0.2 });
-
-    const removeHover = () =>
-      gsap.to(cursor, { scale: 1, backgroundColor: "white", duration: 0.2 });
-
-    const setHoverListeners = () => {
-      const hoverEls = document.querySelectorAll(".main-head");
-      hoverEls.forEach((el) => {
-        el.addEventListener("mouseenter", addHover);
-        el.addEventListener("mouseleave", removeHover);
-      });
-
-      return () => {
-        hoverEls.forEach((el) => {
-          el.removeEventListener("mouseenter", addHover);
-          el.removeEventListener("mouseleave", removeHover);
-        });
-      };
+    const onOver = (e) => {
+      const t = e.target.closest?.(LOCKABLE) || null;
+      if (t === target) return;
+      target = t;
+      const label = t?.dataset.lock || "";
+      tag.textContent = label;
+      tag.style.opacity = label ? "1" : "0";
+      frame.dataset.locked = t ? "true" : "false";
     };
-
-    // Hover effects #2
-    const addHover2 = () =>
-      gsap.to(cursor, { scale: 12, backgroundColor: "white", duration: 0.2 });
-
-    const removeHover2 = () =>
-      gsap.to(cursor, { scale: 1, backgroundColor: "white", duration: 0.2 });
-
-    const setHoverListeners2 = () => {
-      const hoverEls = document.querySelectorAll(".cursor-scale");
-      hoverEls.forEach((el) => {
-        el.addEventListener("mouseenter", addHover2);
-        el.addEventListener("mouseleave", removeHover2);
-      });
-
-      return () => {
-        hoverEls.forEach((el) => {
-          el.removeEventListener("mouseenter", addHover2);
-          el.removeEventListener("mouseleave", removeHover2);
-        });
-      };
+    const onLeave = () => {
+      visible = false;
+      frame.style.opacity = dot.style.opacity = "0";
     };
+    const onDown = () => frame.classList.add("scale-90");
+    const onUp = () => frame.classList.remove("scale-90");
 
-    const cleanupHover = setHoverListeners();
-    const cleanupHover2 = setHoverListeners2();
+    const loop = () => {
+      let tx = mx;
+      let ty = my;
+      let tw = IDLE;
+      let th = IDLE;
+      if (target && target.isConnected) {
+        const r = target.getBoundingClientRect();
+        if (r.width < window.innerWidth * 0.8 && r.height < window.innerHeight * 0.6) {
+          tx = r.left + r.width / 2;
+          ty = r.top + r.height / 2;
+          tw = r.width + PAD * 2;
+          th = r.height + PAD * 2;
+        }
+      }
+      const k = 0.24;
+      cur.x += (tx - cur.x) * k;
+      cur.y += (ty - cur.y) * k;
+      cur.w += (tw - cur.w) * k;
+      cur.h += (th - cur.h) * k;
+      frame.style.transform = `translate3d(${cur.x - cur.w / 2}px, ${cur.y - cur.h / 2}px, 0)`;
+      frame.style.width = `${cur.w}px`;
+      frame.style.height = `${cur.h}px`;
+      dot.style.transform = `translate3d(${mx - 2}px, ${my - 2}px, 0)`;
+      raf = requestAnimationFrame(loop);
+    };
+    raf = requestAnimationFrame(loop);
 
+    window.addEventListener("pointermove", onMove, { passive: true });
+    document.addEventListener("pointerover", onOver);
+    document.documentElement.addEventListener("pointerleave", onLeave);
+    window.addEventListener("pointerdown", onDown);
+    window.addEventListener("pointerup", onUp);
     return () => {
-      window.removeEventListener("mousemove", moveCursor);
-      if (animationFrame.current) cancelAnimationFrame(animationFrame.current);
-      cleanupHover && cleanupHover();
-      cleanupHover2 && cleanupHover2();
+      cancelAnimationFrame(raf);
+      html.classList.remove("has-lock-cursor");
+      window.removeEventListener("pointermove", onMove);
+      document.removeEventListener("pointerover", onOver);
+      document.documentElement.removeEventListener("pointerleave", onLeave);
+      window.removeEventListener("pointerdown", onDown);
+      window.removeEventListener("pointerup", onUp);
     };
-  }, [location]);
+  }, [enabled]);
+
+  if (!enabled) return null;
 
   return (
-    <div
-      ref={cursorRef}
-      style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        width: 20,
-        height: 20,
-        borderRadius: "50%",
-        backgroundColor: "white",
-        pointerEvents: "none",
-        transform: "translate(-50%, -50%)",
-        zIndex: 9999,
-        mixBlendMode: "difference",
-      }}
-    />
+    <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-[90] mix-blend-difference">
+      <div
+        ref={frameRef}
+        data-locked="false"
+        className="brackets absolute top-0 left-0 text-phos opacity-0 transition-[scale,opacity] duration-150 [--bk:7px] data-[locked=true]:[--bk:10px]"
+      >
+        <i />
+        <i />
+        <i />
+        <i />
+        <span
+          ref={tagRef}
+          className="t-label absolute top-full left-0 mt-2 whitespace-nowrap text-[10px] opacity-0 transition-opacity"
+        />
+      </div>
+      <div ref={dotRef} className="absolute top-0 left-0 h-1 w-1 bg-phos opacity-0" />
+    </div>
   );
 };
 

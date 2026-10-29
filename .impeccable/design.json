@@ -1,0 +1,136 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-29T00:00:00Z",
+  "title": "Design System: VORXEN",
+  "extensions": {
+    "colorMeta": {
+      "void":  { "role": "neutral",  "displayName": "Void", "canonical": "#000000", "tonalRamp": ["#000000", "#05070a", "#0b0f12", "#12181c", "#1c2328", "#2a3238", "#3a4349", "#4d565c"] },
+      "panel": { "role": "neutral",  "displayName": "Panel", "canonical": "#080b0d", "tonalRamp": ["#030405", "#080b0d", "#0f1418", "#171e23", "#212a30", "#2e383f", "#3d4950", "#4f5c64"] },
+      "steel": { "role": "neutral",  "displayName": "Instrument Steel", "canonical": "#1b2228", "tonalRamp": ["#0b0f12", "#141a1e", "#1b2228", "#263037", "#33404a", "#4a5864", "#6a7984", "#9aa6ae"] },
+      "rule":  { "role": "neutral",  "displayName": "Rule", "canonical": "#26313a", "tonalRamp": ["#10161a", "#19222a", "#26313a", "#33414c", "#46555f", "#617079", "#86939b", "#b5bfc5"] },
+      "dim":   { "role": "neutral",  "displayName": "Dim Phosphor", "canonical": "#8fa3ad", "tonalRamp": ["#26303a", "#3d4b54", "#566770", "#728690", "#8fa3ad", "#a9bac2", "#c5d2d8", "#e2eaee"] },
+      "phos":  { "role": "neutral",  "displayName": "Phosphor", "canonical": "#d8f3ff", "tonalRamp": ["#1f2f36", "#36515c", "#527884", "#74a0ad", "#9ac5d2", "#bce0ec", "#d8f3ff", "#eef9ff"] },
+      "diag":  { "role": "primary",  "displayName": "Diagnostic Cyan", "canonical": "#6ce1ff", "tonalRamp": ["#06303b", "#0b4d5e", "#13708a", "#2096b6", "#3dbbe0", "#6ce1ff", "#a6edff", "#dbf8ff"] },
+      "warn":  { "role": "secondary", "displayName": "Caution Amber", "canonical": "#ffb547", "tonalRamp": ["#3a2205", "#5c3707", "#86520c", "#b36f14", "#e0901f", "#ffb547", "#ffcf87", "#ffe9c6"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display (Luna Obscura)", "purpose": "Page titles, closing declaration, phone wordmark; decoded in. Outline variant for answering lines." },
+      "headline": { "displayName": "Headline (Archivo wide)", "purpose": "Section statements in human voice, line-masked rise." },
+      "headline-section": { "displayName": "Section Headline", "purpose": "Smaller section heads such as Directives and Evolution." },
+      "title": { "displayName": "Title (Luna)", "purpose": "Module names in panels, tables, and spec pages." },
+      "body": { "displayName": "Body", "purpose": "Prose in dim phosphor at 40 to 50ch." },
+      "label": { "displayName": "Label (Martian Mono)", "purpose": "Every system voice: POST lines, readouts, nav, actions, form labels, captions." },
+      "wordmark": { "displayName": "Wordmark", "purpose": "Header and footer logotype. Dune Rise is used only inside the hero 3D scene." }
+    },
+    "shadows": [],
+    "motion": [
+      { "name": "ease-out-expo", "value": "cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "Default for reveals, action wipes, hover extensions (500ms)." },
+      { "name": "scan-out", "value": "600ms expo.inOut", "purpose": "Route change: 1px cyan line and void fill sweep down." },
+      { "name": "scan-in", "value": "750ms expo.inOut", "purpose": "Route change: line sweeps again to reveal the new route." },
+      { "name": "boot", "value": "2.1s power2.inOut, then 450ms expo.in collapse", "purpose": "Power-on self-test counter and progress bar, then panel collapses to a line." },
+      { "name": "decode", "value": "500 to 1400ms linear, left to right", "purpose": "Characters resolve from glyph noise." },
+      { "name": "reveal-rise", "value": "y 24px, 1s expo.out, 80 to 100ms stagger", "purpose": "Copy and readout entry." },
+      { "name": "caret", "value": "1.05s steps(1) infinite", "purpose": "Blinking block caret for running states." },
+      { "name": "cursor-lerp", "value": "0.24 per frame", "purpose": "Target-lock cursor follow and snap." },
+      { "name": "reduced-motion", "value": "prefers-reduced-motion: reduce", "purpose": "Boot fades in 0.4s at 100; routes swap instantly; Decode shows final text; custom cursor off; scroll reveals skipped; module scan stacks; caret, level bars, scan indicator, bands static." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Action",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Phosphor plate; a cyan scan wipes across from the left on hover or focus.",
+      "html": "<button class=\"ds-action-primary\"><span class=\"ds-wipe\"></span><span class=\"ds-txt\">Establish link</span><svg class=\"ds-arrow\" viewBox=\"0 0 24 24\" width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"5\" y1=\"12\" x2=\"19\" y2=\"12\"/><polyline points=\"12 5 19 12 12 19\"/></svg></button>",
+      "css": ".ds-action-primary { position: relative; display: inline-flex; align-items: center; gap: 16px; overflow: hidden; background: #d8f3ff; color: #000; padding: 16px 24px; border: 0; border-radius: 0; font-family: 'Martian Mono Variable', 'Martian Mono', ui-monospace, monospace; font-size: 0.6875rem; line-height: 1.6; letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer; } .ds-action-primary .ds-wipe { position: absolute; inset: 0; background: #6ce1ff; transform: scaleX(0); transform-origin: left; transition: transform 500ms cubic-bezier(0.16,1,0.3,1); } .ds-action-primary .ds-txt, .ds-action-primary .ds-arrow { position: relative; transition: transform 500ms cubic-bezier(0.16,1,0.3,1); } .ds-action-primary:hover .ds-wipe, .ds-action-primary:focus-visible .ds-wipe { transform: scaleX(1); } .ds-action-primary:hover .ds-arrow { transform: translateX(4px); } .ds-action-primary:focus-visible { outline: 1px solid #6ce1ff; outline-offset: 4px; } .ds-action-primary:disabled { opacity: 0.4; }"
+    },
+    {
+      "name": "Text Action",
+      "kind": "button",
+      "refersTo": "text-action",
+      "description": "Label text with a 1px rule that extends and turns cyan on hover.",
+      "html": "<a href=\"#\" class=\"ds-action-text\">Explore systems<span class=\"ds-rule\"></span></a>",
+      "css": ".ds-action-text { display: inline-flex; align-items: center; gap: 12px; padding: 12px 0; color: #d8f3ff; text-decoration: none; font-family: 'Martian Mono Variable', 'Martian Mono', ui-monospace, monospace; font-size: 0.6875rem; line-height: 1.6; letter-spacing: 0.14em; text-transform: uppercase; } .ds-action-text .ds-rule { display: block; height: 1px; width: 24px; background: #d8f3ff; transition: width 500ms cubic-bezier(0.16,1,0.3,1), background-color 500ms cubic-bezier(0.16,1,0.3,1); } .ds-action-text:hover .ds-rule, .ds-action-text:focus-visible .ds-rule { width: 48px; background: #6ce1ff; } .ds-action-text:focus-visible { outline: 1px solid #6ce1ff; outline-offset: 4px; }"
+    },
+    {
+      "name": "Line Field",
+      "kind": "input",
+      "refersTo": "input-line",
+      "description": "Baseline-only field with a Label above; cyan on focus, amber on error.",
+      "html": "<label class=\"ds-field\"><span class=\"ds-field-label\">Callsign</span><input class=\"ds-field-input\" type=\"text\" /></label>",
+      "css": ".ds-field { display: block; } .ds-field-label { display: block; color: #8fa3ad; font-family: 'Martian Mono Variable', 'Martian Mono', ui-monospace, monospace; font-size: 0.6875rem; line-height: 1.6; letter-spacing: 0.14em; text-transform: uppercase; transition: color 150ms; } .ds-field-input { margin-top: 8px; width: 100%; background: transparent; border: 0; border-bottom: 1px solid #26313a; border-radius: 0; padding: 12px 0; color: #d8f3ff; caret-color: #6ce1ff; font-family: 'Archivo Variable', Archivo, system-ui, sans-serif; font-size: 1.25rem; outline: none; transition: border-color 150ms; } .ds-field:focus-within .ds-field-label { color: #6ce1ff; } .ds-field-input:focus { border-bottom-color: #6ce1ff; } .ds-field-input[aria-invalid=true] { border-bottom-color: #ffb547; }"
+    },
+    {
+      "name": "Channel Nav",
+      "kind": "nav",
+      "refersTo": "nav-channel",
+      "description": "Label channels with a 6px state square: steel idle, cyan active.",
+      "html": "<nav class=\"ds-nav\"><span class=\"ds-nav-rule\"></span><a href=\"#\" class=\"ds-nav-item is-active\"><i></i>Core</a><a href=\"#\" class=\"ds-nav-item\"><i></i>Systems</a><a href=\"#\" class=\"ds-nav-item\"><i></i>Origin</a><a href=\"#\" class=\"ds-nav-item\"><i></i>Link</a></nav>",
+      "css": ".ds-nav { display: flex; align-items: center; gap: 40px; background: #000; padding: 16px 24px; } .ds-nav-rule { display: block; height: 1px; width: 160px; background: #26313a; } .ds-nav-item { display: inline-flex; align-items: center; gap: 8px; padding: 8px 0; color: #8fa3ad; text-decoration: none; font-family: 'Martian Mono Variable', 'Martian Mono', ui-monospace, monospace; font-size: 0.6875rem; letter-spacing: 0.14em; text-transform: uppercase; transition: color 150ms; } .ds-nav-item i { width: 6px; height: 6px; background: #1b2228; transition: background-color 150ms; } .ds-nav-item:hover { color: #d8f3ff; } .ds-nav-item:hover i { background: #8fa3ad; } .ds-nav-item.is-active { color: #d8f3ff; } .ds-nav-item.is-active i { background: #6ce1ff; } .ds-nav-item:focus-visible { outline: 1px solid #6ce1ff; outline-offset: 4px; }"
+    },
+    {
+      "name": "Readout",
+      "kind": "custom",
+      "refersTo": "readout-row",
+      "description": "Definition-list readout: dim key, dotted steel leader, phosphor value, 1px track.",
+      "html": "<dl class=\"ds-readout\"><div class=\"ds-row\"><dt>Response latency</dt><span class=\"ds-leader\"></span><dd>12 ms</dd></div><div class=\"ds-track\"><div style=\"transform: scaleX(0.94)\"></div></div></dl>",
+      "css": ".ds-readout { margin: 0; background: #000; border-top: 1px solid #26313a; padding: 0 0 16px; font-family: 'Martian Mono Variable', 'Martian Mono', ui-monospace, monospace; font-size: 0.6875rem; letter-spacing: 0.14em; text-transform: uppercase; font-variant-numeric: tabular-nums; } .ds-row { display: flex; align-items: baseline; gap: 16px; padding-top: 16px; } .ds-row dt { color: #8fa3ad; } .ds-row dd { margin: 0; color: #d8f3ff; } .ds-leader { flex: 1; border-bottom: 1px dotted #1b2228; } .ds-track { margin-top: 12px; height: 1px; background: #1b2228; } .ds-track div { height: 1px; background: #6ce1ff; transform-origin: left; }"
+    },
+    {
+      "name": "POST Log",
+      "kind": "custom",
+      "refersTo": "readout-row",
+      "description": "Power-on self-test lines: cyan [OK], amber [..], with a block caret for running state.",
+      "html": "<ol class=\"ds-post\"><li><b class=\"ok\">[OK]</b>Neural core</li><li><b class=\"ok\">[OK]</b>Vision</li><li><b class=\"run\">[..]</b>Learning<span class=\"ds-caret\"></span></li></ol>",
+      "css": ".ds-post { list-style: none; margin: 0; padding: 16px; background: #000; color: #d8f3ff; font-family: 'Martian Mono Variable', 'Martian Mono', ui-monospace, monospace; font-size: 0.6875rem; line-height: 1.6; letter-spacing: 0.14em; text-transform: uppercase; } .ds-post li { display: flex; gap: 12px; margin-bottom: 6px; } .ds-post b { font-weight: 400; } .ds-post .ok { color: #6ce1ff; } .ds-post .run { color: #ffb547; } .ds-caret { display: inline-block; width: 0.55em; height: 1em; vertical-align: -0.12em; background: #6ce1ff; animation: ds-caret 1.05s steps(1) infinite; } @keyframes ds-caret { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } } @media (prefers-reduced-motion: reduce) { .ds-caret { animation: none; } }"
+    },
+    {
+      "name": "Calibration Frame",
+      "kind": "card",
+      "refersTo": "calibration-frame",
+      "description": "Four 1px corner brackets around a Panel well, with code and status captions.",
+      "html": "<div class=\"ds-frame\"><i></i><i></i><i></i><i></i><span class=\"ds-cap-l\">NC-01 · 01/04</span><span class=\"ds-cap-r\">[OK] Online</span></div>",
+      "css": ".ds-frame { position: relative; width: 320px; aspect-ratio: 16/10; background: #080b0d; color: rgb(216 243 255 / 0.8); font-family: 'Martian Mono Variable', 'Martian Mono', ui-monospace, monospace; font-size: 0.6875rem; letter-spacing: 0.14em; text-transform: uppercase; } .ds-frame > i { position: absolute; width: 16px; height: 16px; border: 0 solid currentColor; } .ds-frame > i:nth-child(1) { left: 0; top: 0; border-left-width: 1px; border-top-width: 1px; } .ds-frame > i:nth-child(2) { right: 0; top: 0; border-right-width: 1px; border-top-width: 1px; } .ds-frame > i:nth-child(3) { left: 0; bottom: 0; border-left-width: 1px; border-bottom-width: 1px; } .ds-frame > i:nth-child(4) { right: 0; bottom: 0; border-right-width: 1px; border-bottom-width: 1px; } .ds-cap-l { position: absolute; left: 16px; bottom: 12px; color: #d8f3ff; } .ds-cap-r { position: absolute; right: 16px; bottom: 12px; color: #6ce1ff; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Self-Diagnostic Boot",
+    "overview": "VORXEN is a machine powering on and testing itself while the visitor watches. Every surface reads as an instrument screen: a void-black ground that the hosted Spline scenes melt into, fine phosphor scanlines over everything, POST log lines that resolve to `[OK]`, fixed-cell readouts, 1px rules, and calibration corner brackets that frame whatever the machine is looking at. The 3D robots are the protagonists; type and chrome are the diagnostic overlay around them.\n\nDensity is split deliberately. Large Luna Obscura display words and wide Archivo headlines carry the statements; everything the machine itself \"says\" (states, measurements, labels, nav channels) is small uppercase Martian Mono with tabular numerals. Colour is nearly monochrome phosphor on black, with diagnostic cyan reserved for live values and active states and amber for in-progress or failing ones.\n\nMotion has two verbs: decode (characters resolve out of glyph noise, left to right) and scan (a single 1px horizontal line sweeps to reveal or dismiss). The site boots once, route changes scan out and back in, and the cursor is a set of calibration brackets that locks onto interactive targets. With reduced motion, every one of these collapses to its end state.",
+    "keyCharacteristics": [
+      "Pure void ground; depth comes from the 3D scenes, never from shadows or glass.",
+      "Square everything: zero radius, 1px rules, corner brackets as the only frame.",
+      "Three voices: Luna for names and declarations, wide Archivo for headlines and prose, Martian Mono for the system.",
+      "Cyan means live; amber means not yet; phosphor is everything else.",
+      "Decode and scan are the whole motion vocabulary."
+    ],
+    "rules": [
+      { "name": "The Live Signal Rule", "body": "Cyan appears only where something is live, active, or confirmed. If the element would read the same with the system powered off, it is not cyan.", "section": "colors" },
+      { "name": "The Fixed Void Rule", "body": "The ground is #000000 everywhere a Spline scene can appear. Do not tint, lift, or texture it beyond the global scanline layer.", "section": "colors" },
+      { "name": "The Machine Voice Rule", "body": "If the system is reporting (a state, a number, a channel, a command), it is set as Label. Headlines and prose are human voice and never mono.", "section": "typography" },
+      { "name": "The Tabular Rule", "body": "Every changing number (counter, gaze, uptime, accuracy) sits in tabular numerals so readouts never jitter.", "section": "typography" },
+      { "name": "The No-Lift Rule", "body": "Nothing floats. A surface earns presence with a 1px rule or a bracket frame, never with a shadow or a translucent pane.", "section": "elevation" },
+      { "name": "The Calibration Frame Rule", "body": "Containers are implied by corners, not boxed by borders. Use four brackets around a unit, image, or call to action; reserve full borders for horizontal rules.", "section": "shapes" }
+    ],
+    "dos": [
+      "Do keep the ground pure void (#000000) wherever a Spline scene can appear.",
+      "Do set every system statement, number, and control in the Label voice with tabular numerals.",
+      "Do frame units, media, and closing calls to action with four 1px corner brackets.",
+      "Do reserve diagnostic cyan for live, active, focused, or confirmed states, and amber for in-progress or error.",
+      "Do introduce display words with Decode and dismiss or reveal views with a single 1px scan line.",
+      "Do give every motion a reduced-motion end state."
+    ],
+    "donts": [
+      "Don't round corners; the system has no radius.",
+      "Don't add box shadows, text glow, glass panes, or backdrop blur to UI elements. (The OGL galaxy's own star luminance is a rendered material, not UI glow.)",
+      "Don't use gradient-filled text; the only gradient in the system is the void scrim behind phone hero copy.",
+      "Don't place small uppercase kickers or eyebrows above headlines; labels annotate frames, rows, and readouts, not headings.",
+      "Don't set the ground to anything but void behind 3D scenes.",
+      "Don't introduce rounded or filled card containers; use rules, brackets, and Panel wells."
+    ]
+  }
+}
