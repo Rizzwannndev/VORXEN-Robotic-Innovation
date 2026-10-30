@@ -74,99 +74,108 @@ function Hero() {
   }, [booted]);
 
   return (
-    <section ref={root} className="relative h-svh min-h-[640px] overflow-hidden" aria-labelledby="hero-title">
+    // Phones: a column. The unit gets whatever height the rail leaves, so the
+    // frame and the rail can never collide whatever the browser chrome takes.
+    // md+: everything layers over the full-bleed stage.
+    <section
+      ref={root}
+      className="relative flex h-svh min-h-[600px] flex-col overflow-hidden md:block md:min-h-[640px]"
+      aria-labelledby="hero-title"
+    >
       <h1 id="hero-title" className="sr-only">
         VORXEN — robotic innovation
       </h1>
 
-      <div data-stage className="absolute inset-0">
-        {/* Phones crop the scene's 3D word into slabs at the edges: fade the edges out */}
-        <SplineScene
-          scene={scenes.hero}
-          eager
-          className="h-full w-full max-md:[mask-image:linear-gradient(to_right,transparent,black_22%,black_78%,transparent)]"
-          label="Opening eye"
-        />
-        <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-[48%] bg-gradient-to-t from-void via-void/85 to-transparent md:hidden" />
+      <div className="relative mt-16 min-h-0 flex-1 md:absolute md:inset-0 md:mt-0">
+        {/* Phones: fade the side edges (the scene's 3D word crops there) and the floor into the rail */}
+        <div
+          data-stage
+          className="absolute inset-0 max-md:[mask-composite:intersect] max-md:[mask-image:linear-gradient(to_right,transparent,black_20%,black_80%,transparent),linear-gradient(to_bottom,black_78%,transparent)]"
+        >
+          <SplineScene scene={scenes.hero} eager className="h-full w-full" label="Opening eye" />
+        </div>
+
+        <div data-overlay className={`pointer-events-none absolute inset-0 ${GUTTER}`}>
+          {/* Calibration frame around the unit */}
+          <div
+            data-frame
+            className="absolute top-7 bottom-8 left-1/2 w-[min(64vw,30rem)] -translate-x-1/2 text-phos/70 md:top-[12%] md:bottom-auto md:h-[74%]"
+          >
+            <Brackets size={22} />
+            <span className="t-label absolute -top-6 left-0 text-dim">Unit VX-01 · Humanoid</span>
+            <span className="t-label absolute -bottom-6 right-0 text-diag">Tracking</span>
+          </div>
+  
+          {/* POST log (desktop): names only, kept clear of the unit's reach */}
+          <ol
+            aria-label="System status"
+            className="absolute top-[64%] left-5 hidden w-[16.5rem] space-y-1.5 sm:left-8 md:block lg:left-12"
+          >
+            {POST_LINES.map(([state, name], i) => (
+              <li key={name} data-rise className="t-label flex items-baseline gap-3">
+                <span className={state === "OK" ? "text-diag" : "text-warn"}>[{state}]</span>
+                <Decode text={name} start={booted} delay={i * 90} duration={500} />
+              </li>
+            ))}
+          </ol>
+  
+          {/* Live readouts (desktop) */}
+          <dl className="absolute top-[64%] right-5 hidden w-[15rem] sm:right-8 md:block lg:right-12">
+            {[
+              ["Accuracy", <><CountUp to={99} duration={1.2} />.0%</>],
+              ["Units online", <CountUp to={15} duration={1.2} />],
+              ["Gaze X", <span data-gx>0.500</span>],
+              ["Gaze Y", <span data-gy>0.500</span>],
+              ["Uptime", <span data-uptime>00:00:00</span>],
+            ].map(([k, v]) => (
+              <div key={k} data-rise className="t-label flex justify-between border-b border-rule py-1.5">
+                <dt className="text-dim">{k}</dt>
+                <dd className="text-phos">{v}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
       </div>
 
-      <div data-overlay className={`pointer-events-none absolute inset-0 ${GUTTER}`}>
-        {/* Calibration frame around the unit */}
-        <div
-          data-frame
-          className="absolute top-[12%] left-1/2 h-[44%] w-[min(62vw,30rem)] -translate-x-1/2 text-phos/70 md:h-[74%]"
-        >
-          <Brackets size={22} />
-          <span className="t-label absolute -top-6 left-0 text-dim">Unit VX-01 · Humanoid</span>
-          <span className="t-label absolute -bottom-6 right-0 text-diag">Tracking</span>
-        </div>
-
-        {/* POST log (desktop): names only, kept clear of the unit's reach */}
-        <ol
-          aria-label="System status"
-          className="absolute top-[64%] left-5 hidden w-[16.5rem] space-y-1.5 sm:left-8 md:block lg:left-12"
-        >
-          {POST_LINES.map(([state, name], i) => (
-            <li key={name} data-rise className="t-label flex items-baseline gap-3">
-              <span className={state === "OK" ? "text-diag" : "text-warn"}>[{state}]</span>
-              <Decode text={name} start={booted} delay={i * 90} duration={500} />
-            </li>
-          ))}
-        </ol>
-
-        {/* Live readouts (desktop) */}
-        <dl className="absolute top-[64%] right-5 hidden w-[15rem] sm:right-8 md:block lg:right-12">
-          {[
-            ["Accuracy", <><CountUp to={99} duration={1.2} />.0%</>],
-            ["Units online", <CountUp to={15} duration={1.2} />],
-            ["Gaze X", <span data-gx>0.500</span>],
-            ["Gaze Y", <span data-gy>0.500</span>],
-            ["Uptime", <span data-uptime>00:00:00</span>],
-          ].map(([k, v]) => (
-            <div key={k} data-rise className="t-label flex justify-between border-b border-rule py-1.5">
-              <dt className="text-dim">{k}</dt>
-              <dd className="text-phos">{v}</dd>
+      {/* Bottom rail: flows under the stage on phones, layers over it from md */}
+      <div
+        data-overlay
+        className={`relative flex items-end justify-between gap-6 pb-[max(1.25rem,env(safe-area-inset-bottom))] md:absolute md:inset-x-0 md:bottom-6 md:pb-0 ${GUTTER}`}
+      >
+        <div data-rise className="w-full md:w-auto">
+          {/* Phone: the scene crops its 3D word, so the wordmark is set here */}
+          <p aria-hidden="true" className="mb-5 font-display text-[15.4vw] leading-none text-phos md:hidden">
+            VORXEN
+          </p>
+          <ol aria-label="System status" className="mb-4 space-y-1 md:hidden">
+            {POST_LINES.slice(2).map(([state, name]) => (
+              <li key={name} className="t-label flex gap-3">
+                <span className={state === "OK" ? "text-diag" : "text-warn"}>[{state}]</span>
+                <Decode text={name} start={booted} duration={500} />
+              </li>
+            ))}
+          </ol>
+          <dl className="mb-4 flex gap-6 border-y border-rule py-2 md:hidden">
+            <div className="t-label flex gap-2">
+              <dt className="text-dim">Accuracy</dt>
+              <dd className="text-phos">99.0%</dd>
             </div>
-          ))}
-        </dl>
-
-        {/* Bottom rail */}
-        <div className="absolute inset-x-5 bottom-6 flex items-end justify-between gap-6 sm:inset-x-8 lg:inset-x-12">
-          <div data-rise className="w-full md:w-auto">
-            {/* Phone: the scene crops its 3D word, so the wordmark is set here */}
-            <p aria-hidden="true" className="mb-5 font-display text-[15.4vw] leading-none text-phos md:hidden">
-              VORXEN
-            </p>
-            <ol aria-label="System status" className="mb-4 space-y-1 md:hidden">
-              {POST_LINES.slice(2).map(([state, name]) => (
-                <li key={name} className="t-label flex gap-3">
-                  <span className={state === "OK" ? "text-diag" : "text-warn"}>[{state}]</span>
-                  <Decode text={name} start={booted} duration={500} />
-                </li>
-              ))}
-            </ol>
-            <dl className="mb-4 flex gap-6 border-y border-rule py-2 md:hidden">
-              <div className="t-label flex gap-2">
-                <dt className="text-dim">Accuracy</dt>
-                <dd className="text-phos">99.0%</dd>
-              </div>
-              <div className="t-label flex gap-2">
-                <dt className="text-dim">Uptime</dt>
-                <dd className="text-phos" data-uptime-m>00:00:00</dd>
-              </div>
-            </dl>
-            <p className="t-label max-w-[17rem] text-dim">
-              <span className="text-phos">Robotic innovation.</span> An intelligent machine that observes, adapts,
-              and learns. <span className="text-phos">{fine ? "Move your cursor — it is watching." : "It is watching."}</span>
-            </p>
-          </div>
-          <span data-rise className="t-label hidden shrink-0 items-center gap-3 text-phos md:flex">
-            Scroll to continue diagnostic
-            <span aria-hidden="true" className="relative block h-10 w-px overflow-hidden bg-rule">
-              <span className="absolute inset-x-0 top-0 h-1/2 animate-[scanY_1.8s_ease-in-out_infinite] bg-diag motion-reduce:animate-none" />
-            </span>
-          </span>
+            <div className="t-label flex gap-2">
+              <dt className="text-dim">Uptime</dt>
+              <dd className="text-phos" data-uptime-m>00:00:00</dd>
+            </div>
+          </dl>
+          <p className="t-label max-w-[22rem] text-dim md:max-w-[17rem]">
+            <span className="text-phos">Robotic innovation.</span> An intelligent machine that observes, adapts,
+            and learns. <span className="text-phos">{fine ? "Move your cursor — it is watching." : "It is watching."}</span>
+          </p>
         </div>
+        <span data-rise className="t-label hidden shrink-0 items-center gap-3 text-phos md:flex">
+          Scroll to continue diagnostic
+          <span aria-hidden="true" className="relative block h-10 w-px overflow-hidden bg-rule">
+            <span className="absolute inset-x-0 top-0 h-1/2 animate-[scanY_1.8s_ease-in-out_infinite] bg-diag motion-reduce:animate-none" />
+          </span>
+        </span>
       </div>
     </section>
   );
